@@ -1,0 +1,37 @@
+.sensor-sliders {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sliders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  
+  .slider-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .slider-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .value-display {
+    background-color: #333;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+  }
+  
+  input[type="range"] {
+    width: 100%;
+  }
