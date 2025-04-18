@@ -5,7 +5,6 @@ import leftFootImage from '../assets/left-foot.jpg';
 import rightFootImage from '../assets/right-foot.jpg';
 
 const FootDiagram = ({ sensorValues }) => {
-  // Sensor positions for left foot - you'll need to adjust these values
   const leftFootSensorPositions = {
     sensor_1: { top: '85%', left: '50%' },
     sensor_2: { top: '75%', left: '40%' },
@@ -24,8 +23,6 @@ const FootDiagram = ({ sensorValues }) => {
     sensor_15: { top: '9%', left: '28%' }
   };
 
-  // Sensor positions for right foot - mirror of left foot
-  // You'll need to adjust these based on your image
   const rightFootSensorPositions = {
     sensor_16: { top: '85%', left: '50%' },
     sensor_17: { top: '75%', left: '60%' },
@@ -102,7 +99,7 @@ const FootDiagram = ({ sensorValues }) => {
       <div className="foot-container">
         <h3>Left Foot</h3>
         {renderFoot(
-          rightFootImage,  // Use the imported variable, not a string path
+          rightFootImage,  
           rightFootSensorPositions,
           false
         )}
@@ -111,7 +108,7 @@ const FootDiagram = ({ sensorValues }) => {
       <div className="foot-container">
         <h3>Right Foot</h3>
         {renderFoot(
-          leftFootImage,  // Use the imported variable, not a string path
+          leftFootImage,  
           leftFootSensorPositions,
           true
         )}

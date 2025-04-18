@@ -1,4 +1,4 @@
-# backend/app.py
+# server.py
 from flask import Flask, jsonify, request, send_from_directory
 from flask_socketio import SocketIO
 from flask_cors import CORS
@@ -9,7 +9,7 @@ import json
 import serial.tools.list_ports
 
 app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
-CORS(app)  # Enable CORS for all routes
+CORS(app) 
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Initialize sensor data
@@ -56,7 +56,6 @@ def read_arduino_data(port, baud_rate=9600):
         }
         socketio.emit('arduino_status', arduino_status)
         
-        # Allow Arduino to reset after connection (Arduino resets when serial connection is established)
         time.sleep(2)
         
         # Main reading loop when connected

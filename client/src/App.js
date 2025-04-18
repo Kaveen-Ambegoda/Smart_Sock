@@ -112,7 +112,7 @@ function App() {
       setArduinoStatus(status);
     });
     
-    // Initial HTTP request to get data and status right away
+    // Initial HTTP request to get data and status 
     const fetchInitialData = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/sensors');
