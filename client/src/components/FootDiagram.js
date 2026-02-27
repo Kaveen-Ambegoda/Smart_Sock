@@ -4,7 +4,7 @@ import './FootDiagram.css';
 import leftFootImage from '../assets/left-foot.jpg';
 import rightFootImage from '../assets/right-foot.jpg';
 
-const FootDiagram = ({ sensorValues }) => {
+const FootDiagram = ({ sensorValues, classification }) => {
   const leftFootSensorPositions = {
     sensor_1: { top: '85%', left: '50%' },
     sensor_2: { top: '75%', left: '40%' },
@@ -95,6 +95,13 @@ const FootDiagram = ({ sensorValues }) => {
 
   return (
     <div className="feet-diagram-container">
+      {/* Classification badge */}
+      {classification && classification !== 'Unknown' && (
+        <div className="classification-badge">
+          <strong>Current State:</strong> {classification}
+        </div>
+      )}
+      
       {/* Right foot */}
       <div className="foot-container">
         <h3>Left Foot</h3>

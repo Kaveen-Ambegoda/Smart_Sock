@@ -14,6 +14,7 @@ function App() {
     port: '',
     mode: 'none'
   });
+  const [classification, setClassification] = useState('Normal');
   const [isLoading, setIsLoading] = useState(false);
   const [activeView, setActiveView] = useState('dashboard');
   const [availablePorts, setAvailablePorts] = useState([]);
@@ -27,10 +28,10 @@ function App() {
         const ports = await response.json();
         setAvailablePorts(ports);
         
-        // Auto-select simulation if available
-        const simulatedPort = ports.find(p => p.device === 'Simulated');
+        // Auto-select a simulation profile if available and nothing chosen yet
+        const simulatedPort = ports.find(p => p.device && p.device.startsWith('Simulated'));
         if (simulatedPort && !selectedPort) {
-          setSelectedPort('Simulated');
+          setSelectedPort(simulatedPort.device);
         }
       }
     } catch (error) {
@@ -106,6 +107,10 @@ function App() {
     socket.on('sensor_update', (data) => {
       setSensorValues(data);
     });
+
+    socket.on('classification_update', (data) => {
+      setClassification(data || 'Unknown');
+    });
     
     socket.on('arduino_status', (status) => {
       console.log('Received Arduino status:', status);
@@ -120,6 +125,7 @@ function App() {
           const data = await response.json();
           setSensorValues(data.sensor_data);
           setArduinoStatus(data.arduino_status);
+          setClassification(data.classification || 'Normal');
         }
       } catch (error) {
         console.error('Error fetching initial data:', error);
@@ -146,9 +152,10 @@ function App() {
             {arduinoStatus.mode === 'arduino' 
               ? `Arduino: ${arduinoStatus.port || 'Connected'}` 
               : arduinoStatus.mode === 'simulation' 
-              ? 'Simulation: Active' 
+              ? arduinoStatus.message || 'Simulation: Active' 
               : 'Not Connected'}
           </span>
+          
           {arduinoStatus.connected && (
             <span className="status-indicator streaming">
               Receiving Data...
@@ -172,8 +179,8 @@ function App() {
               <option value="">Select a port...</option>
             {availablePorts.map((port, index) => (
               <option key={index} value={port.device}>
-                  {port.device === 'Simulated' 
-                    ? '🔹 Simulation Mode' 
+                  {port.device && port.device.startsWith('Simulated')
+                    ? `🔹 ${port.label || port.description || 'Simulation Mode'}`
                     : `${port.device} - ${port.description}`}
               </option>
             ))}
@@ -195,7 +202,9 @@ function App() {
               disabled={!selectedPort || isLoading}
               className="button connect"
             >
-                {selectedPort === 'Simulated' ? 'Start Simulation' : 'Connect to Arduino'}
+                {selectedPort && selectedPort.startsWith('Simulated') 
+                  ? `Start ${availablePorts.find(p => p.device === selectedPort)?.label || 'Simulation'}` 
+                  : 'Connect to Arduino'}
             </button>
           ) : (
               <>
@@ -254,15 +263,14 @@ function App() {
           {activeView === 'dashboard' && (
             <div className="dashboard-view">
               <SensorButtons sensorValues={sensorValues} />
-              <div className="foot-diagram-section">
-                <FootDiagram sensorValues={sensorValues} />
-              </div>
             </div>
           )}
           
           {activeView === 'live-data' && (
             <div className="live-data-view">
-              <SensorButtons sensorValues={sensorValues} />
+              <div className="foot-diagram-section">
+                <FootDiagram sensorValues={sensorValues} classification={classification} />
+              </div>
             </div>
           )}
           
